@@ -39,7 +39,7 @@ capitalizeListTitles = false
 
   # --- features ---
   search = true
-  themeCredit = true      # "Built with Hugo and RetroCSS for Hugo" in the footer
+  themeCredit = false      
 
   # --- SEO ---
   images = ["images/og-card.png"]

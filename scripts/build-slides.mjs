@@ -1,14 +1,71 @@
 import { spawnSync } from "node:child_process";
-import { readFile, readdir, mkdir, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { access, readFile, readdir, mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse } from "jsonc-parser";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const slidesRoot = path.join(root, "slides");
 const outputRoot = path.join(root, "static", "marp");
 const dataRoot = path.join(root, "data", "marp");
 const manifestPath = path.join(dataRoot, "slides.json");
+const settingsPath = path.join(root, ".vscode", "settings.json");
+const themeCachePath = path.join(root, "node_modules", ".cache", "marp-themes");
 const cliPackagePath = path.join(root, "node_modules", "@marp-team", "marp-cli", "package.json");
+
+const settingsText = await readFile(settingsPath, "utf8");
+const parseErrors = [];
+const settings = parse(settingsText, parseErrors);
+if (parseErrors.length > 0) {
+  throw new Error(`Could not parse ${path.relative(root, settingsPath)}: ${parseErrors.length} JSONC error(s).`);
+}
+
+function readBoolean(value, name) {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string" && /^(true|false)$/i.test(value)) return value.toLowerCase() === "true";
+  throw new Error(`${name} must be true or false.`);
+}
+
+let themeReferences = settings["markdown.marp.themes"] ?? [];
+if (process.env.MARP_THEMES !== undefined) {
+  try {
+    themeReferences = JSON.parse(process.env.MARP_THEMES);
+  } catch {
+    throw new Error("MARP_THEMES must contain a JSON array of theme URLs or file paths.");
+  }
+}
+if (!Array.isArray(themeReferences) || themeReferences.some((theme) => typeof theme !== "string")) {
+  throw new Error('"markdown.marp.themes" / MARP_THEMES must be an array of strings.');
+}
+
+const enableHtml = readBoolean(
+  process.env.MARP_ENABLE_HTML ?? settings["markdown.marp.enableHtml"] ?? false,
+  "markdown.marp.enableHtml / MARP_ENABLE_HTML",
+);
+process.env.MARP_THEMES = JSON.stringify(themeReferences);
+process.env.MARP_ENABLE_HTML = String(enableHtml);
+
+await mkdir(themeCachePath, { recursive: true });
+const themePaths = [];
+for (const reference of themeReferences) {
+  if (/^https:\/\//i.test(reference)) {
+    const url = new URL(reference);
+    const extension = path.extname(url.pathname) || ".css";
+    const filename = `${createHash("sha256").update(reference).digest("hex")}${extension}`;
+    const cacheFile = path.join(themeCachePath, filename);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Could not download Marp theme ${reference}: HTTP ${response.status}.`);
+    }
+    await writeFile(cacheFile, await response.text());
+    themePaths.push(cacheFile);
+  } else {
+    const themePath = path.resolve(root, reference);
+    await access(themePath);
+    themePaths.push(themePath);
+  }
+}
 
 async function findMarkdown(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -53,15 +110,34 @@ for (const sourcePath of sources) {
   nextOutputs.add(outputPath);
   await mkdir(path.dirname(outputPath), { recursive: true });
 
-  const result = spawnSync(process.execPath, [cliPath, "--html", "--output", outputPath, sourcePath], {
+  const themeArguments = themePaths.flatMap((themePath) => ["--theme-set", themePath]);
+  const htmlArgument = enableHtml ? "--html" : "--no-html";
+  const result = spawnSync(process.execPath, [
+    cliPath,
+    htmlArgument,
+    ...themeArguments,
+    "--output",
+    outputPath,
+    sourcePath,
+  ], {
     cwd: root,
+    env: {
+      ...process.env,
+      MARP_THEMES: JSON.stringify(themeReferences),
+      MARP_ENABLE_HTML: String(enableHtml),
+    },
     stdio: "inherit",
   });
 
   if (result.error) throw result.error;
   if (result.status !== 0) process.exit(result.status ?? 1);
 
-  nextSlides.push({ title, url: route, output: outputRelativePath.replaceAll(path.sep, "/") });
+  nextSlides.push({
+    title,
+    source: path.relative(root, sourcePath).replaceAll(path.sep, "/"),
+    url: route,
+    output: outputRelativePath.replaceAll(path.sep, "/"),
+  });
 }
 
 const outputRootPrefix = `${path.resolve(outputRoot)}${path.sep}`;

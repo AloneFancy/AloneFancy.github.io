@@ -6,6 +6,7 @@
     "build": "npm run slides:build && hugo --config hugo.toml"
   },
   "devDependencies": {
-    "@marp-team/marp-cli": "^4.5.1"
+    "@marp-team/marp-cli": "^4.5.1",
+    "jsonc-parser": "^3.3.1"
   }
 }

@@ -1,6 +1,19 @@
 [
   {
+    "title": "HOI4 Clone Concept: East Asian Grand Strategy",
+    "source": "slides/hoi4Clone.md",
+    "url": "/marp/hoi4Clone/",
+    "output": "static/marp/hoi4Clone/index.html"
+  },
+  {
+    "title": "**kenoma**",
+    "source": "slides/kenoma-pitch.md",
+    "url": "/marp/kenoma-pitch/",
+    "output": "static/marp/kenoma-pitch/index.html"
+  },
+  {
     "title": "Marpで研究室の発表スライドを作る",
+    "source": "slides/marp.md",
     "url": "/marp/marp/",
     "output": "static/marp/marp/index.html"
   }

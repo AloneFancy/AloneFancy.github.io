@@ -5,7 +5,12 @@
   {{ with hugo.Data.marp.slides }}
   <ul class="retro-list retro-list-striped">
     {{ range . }}
-    <li><a href="{{ .url | relURL }}">{{ .title }}</a></li>
+    <li>
+      <a href="{{ .url | relURL }}">{{ .title }}</a>
+      <div class="retro-text-sm retro-text-muted">
+        Source: <code>{{ .source }}</code> &middot; URL: <code>{{ .url }}</code>
+      </div>
+    </li>
     {{ end }}
   </ul>
   {{ else }}
