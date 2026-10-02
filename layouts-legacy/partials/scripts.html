@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="{{ "/css/bootstrap.min.css" | relURL }}">
+<link rel="stylesheet" href="{{ "/css/bootstrap-theme.min.css" | relURL }}">
+<link rel="stylesheet" href="{{ "/css/style.css" | relURL }}"> {{ range .Site.Params.customCSS -}}
+<link rel="stylesheet" href="{{ . | relURL }}"> {{- end }}
+<script src="{{ "/js/jquery.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap.min.js" | relURL }}"></script>
+<!-- <script src="{{ "/js/bootstrap-386.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-transition.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-alert.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-modal.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-dropdown.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-scrollspy.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-tab.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-tooltip.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-popover.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-button.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-collapse.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-carousel.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-typeahead.js" | relURL }}"></script>
+<script src="{{ "/js/bootstrap-affix.js" | relURL }}"></script>-->
+<script>
+    // Free updated script to get the actual year !! no more document.write or stuff!!
+    function ThisYear() {
+        document.getElementById('thisyear').innerHTML = new Date().getFullYear();
+    };
+</script>
+<script>	
+	
+(function(){
+  _386.magicCursor();
+  _386.scrollLock();
+  $('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="popover"]').popover();
+
+  $(window).scroll(function() {
+    var top = $(document).scrollTop();
+    if(top > 50)
+      $('#home > .navbar').removeClass('navbar-transparent');
+    else
+      $('#home > .navbar').addClass('navbar-transparent');
+  });
+
+  $("a[href='#']").click(function(e) {
+    e.preventDefault();
+  });
+
+})();</script>
+{{- range .Site.Params.customJS }}
+<script src="{{ . | relURL }}"></script>
+{{- end }}

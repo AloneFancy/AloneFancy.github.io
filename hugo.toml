@@ -1,103 +1,54 @@
 baseURL = 'http://localhost:1313/'
 languageCode = 'en-us'
-title = 'Mein Profil'
-#theme = 'hugo.386'
+title = "Profile"
+theme = "hugo-theme-retrocss"
 
+# Shortcodes and render hooks emit real markup.
+[markup.goldmark.renderer]
+  unsafe = true
+
+# Keep tags reading the way they were written.
+capitalizeListTitles = false
+
+[pagination]
+  pagerSize = 6
+
+[[menus.main]]
+  name = "Marp"
+  url = "/marp/"
+  weight = 30
 
 [params]
-    # The name to display as main title in the home page
-    mainpagetitle = "Profile"
+  description = "Notes on building interfaces that look like 1995 and behave like today."
+  tagline = "a Win9x-style Hugo theme"     # appended to the home page's <title>
 
-    # The subtitle to display under the title in the home page
-    mainpagesubtitle = "Welcome to the early 90s!" 
+  # --- chrome ---
+  accentHue = "primary"   # any RetroCSS hue: teal, violet, gold, navy, …
+  borderRadius = "0"      # one token rounds the entire framework
+  fontHeading = ""        # e.g. "'Segoe UI', Tahoma, sans-serif"
+  sidebar = "left"        # left | right | off
 
-    # The description of your website. It will be displayed in the home page
-    mainpagedesc = "Who am I?"
+  # --- content ---
+  dateFormat = "2 January 2006"
+  showReadingTime = true
+  showAuthor = true
+  showToc = true
+  relatedPosts = 3
+  mainSections = ["post"]
+  docsSection = "docs"
 
-    # The name to display in the copyright section in the footer
-    copyrightname = "Alonefancy"
+  # --- features ---
+  search = true
+  themeCredit = true      # "Built with Hugo and RetroCSS for Hugo" in the footer
 
-    # The url to use as link in the copyright name in the footer. Leave empty to use none.
-    copyrighturl = "http://jmf-portfolio.netlify.com"
+  # --- SEO ---
+  images = ["images/og-card.png"]
+  twitterSite = "@you"
 
-    # Show the "built on Hugo" disclaimer
-    #showhugo = true
-
-    # Urls for social networks
-    
-    #facebook = "https://facebook.com"
-    twitter = "https://twitter.com/al0nefancy"
-    #linkedin = "https://linkedin.com"
-    github = "https://github.com/alonefancy"
-    #gitlab = "https://gitlab.com"
-    email = "hien.thanh.nguyen13@gmail.com"
-
-    # Enables or disables the loading animations. false activates them. Default is false.
-    loadfastload = false
-
-    # Sets the speed for the page loading effect. Default is 1.0.
-    loadspeedfactor = 1.0
-
-    # Enables or disables the second flyby cursor. Default is false.
-    loadonepass = false
-
-[params.copyright]
+  [params.author]
     name = "AloneFancy"
+    initials = "AF"
+    bio = "Wandering with a purpose."
 
-    # The url to use as link in the copyright name in the footer. Leave empty to use none.
-    url = "https://github.com/AloneFancy"
-
-    # Text to go before copyright information
-    #prefix = "[hugo.386 theme by Max le Fou](https://gitlab.com/maxlefou/hugo.386)"
-
-    # Text to go between copyright and hugo disclaimer (if enabled)
-    suffix = "All rights reserved"
-
-[menu]
-  # This displays buttons in the navbar to access your contents
-  [[menu.main]]
-    identifier = "posts"
-    name = "All posts"
-    url = "/posts/"       # The path can lead to a content folder too.
-    weight = 10
-
-  [[menu.main]]
-    identifier = "about" # An unique identifier for the button
-    name = "About"       # A display name for the button
-    url = "/about/"      # The path to the content. It can lead to a single page (like here)
-    weight = 20          # A number to order the buttons in the navbar
-
-  
-
-[taxonomies]
-category = "categories"
-tag = "tags"
-
-
-[privacy]
-
-  [privacy.vimeo]
-    disabled = false
-    simple = true
-
-  [privacy.twitter]
-    disabled = false
-    enableDNT = true
-    simple = true
-
-  [privacy.instagram]
-    disabled = false
-    simple = true
-
-  [privacy.youtube]
-    disabled = false
-    privacyEnhanced = true
-
-[services]
-
-  [services.instagram]
-    disableInlineCSS = true
-
-  [services.twitter]
-    disableInlineCSS = true
-
+  [params.comments]
+    provider = "none"     # none | giscus | utterances

@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "slides:build": "node scripts/build-slides.mjs",
+    "dev": "npm run slides:build && hugo server --config hugo.toml",
+    "build": "npm run slides:build && hugo --config hugo.toml"
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.5.1"
+  }
+}

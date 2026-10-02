@@ -1,0 +1,7 @@
+[
+  {
+    "title": "Marpで研究室の発表スライドを作る",
+    "url": "/marp/marp/",
+    "output": "static/marp/marp/index.html"
+  }
+]

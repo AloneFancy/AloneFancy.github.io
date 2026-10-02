@@ -1,0 +1,14 @@
+{{ define "main" }}
+  <h1>{{ .Title }}</h1>
+  {{ with .Content }}<div class="retro-prose retro-mb-4">{{ . }}</div>{{ end }}
+
+  {{ with hugo.Data.marp.slides }}
+  <ul class="retro-list retro-list-striped">
+    {{ range . }}
+    <li><a href="{{ .url | relURL }}">{{ .title }}</a></li>
+    {{ end }}
+  </ul>
+  {{ else }}
+  <p>No presentations have been exported yet.</p>
+  {{ end }}
+{{ end }}

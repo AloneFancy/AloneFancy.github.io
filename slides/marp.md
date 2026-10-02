@@ -1,4 +1,5 @@
 ---
+title: "Marpで研究室の発表スライドを作る"
 marp: true
 theme: academic
 paginate: true
